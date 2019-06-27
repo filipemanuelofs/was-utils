@@ -25,3 +25,6 @@
 		-  O caminho da célula, exemplo `C:\\IBM\\WebSphere\\AppServer\\profiles\\AppSrv01\\config\\cells\\cell01\\'`
 	- APP_NOME
 		-  `app-corporativo`
+#### Executar
+- Executar onde o script for baixado
+	- `$ python was-fix-composition-unit.py`
