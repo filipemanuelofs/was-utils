@@ -92,7 +92,7 @@ def __app_status(aplicativo):
 	objeto = AdminControl.completeObjectName('type=Application,name=' + aplicativo + ',*')
 	
 	if objeto != "":
-		status = 'Rodando'
+		status = 'Iniciado'
 	
 	return status
 
