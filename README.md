@@ -1,5 +1,5 @@
 ## was-deploy.py
-#### Configurar
+#### Configuração
 - Abra o script e configure as constantes de acordo do seu projeto:
 	- PROJETO_BASE_LOCAL
 		-  O caminho do projeto, exemplo `C:\\Desenvolvimento\\Projetos\\AppCorporativo\\`
@@ -11,7 +11,7 @@
 		- O caminho/pastas a serem compiladas pelo Maven. Essas pastas serão executadas na ordem em que estão descritas. Caso alguma seja dependente de outra, coloque-a antes.
 		- `PROJETOS [ ModuloEJB, ModuloWAR, ModuloEAR ]`
 		- Neste caso, o `ModuloEAR` empacota o `ModuloWAR` e `ModuloEJB`, por isso ele ficou por último.
-#### Executar
+#### Execução
 - Entrar na pasta `bin` do WebSphere:
 	- `$ cd <CAMINHO_WAS>\WebSphere\AppServer\bin`
 - Executar o comando dentro da pasta `bin`:
@@ -19,12 +19,14 @@
 	- Caso queira utilizar outro usuário para execução do deploy, troque o parâmetro `-username` e `-password`
 
 ## was-fix-composition-unit.py
-#### Configurar
+#### Configuração
 - Abra o script e configure as constantes de acordo do seu projeto:
 	- WAS_CELL_CAMINHO
 		-  O caminho da célula, exemplo `C:\\IBM\\WebSphere\\AppServer\\profiles\\AppSrv01\\config\\cells\\cell01\\'`
 	- APP_NOME
 		-  `app-corporativo`
-#### Executar
+#### Execução
+- Parar o servidor
 - Executar onde o script for baixado
 	- `$ python was-fix-composition-unit.py`
+- Iniciar o servidor
