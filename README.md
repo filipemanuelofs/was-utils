@@ -3,9 +3,9 @@
 - Abra o script e configure as constantes de acordo do seu projeto:
 	- PROJETO_BASE_LOCAL
 		-  O caminho do projeto, exemplo `C:\\Desenvolvimento\\Projetos\\AppCorporativo\\`
-	- EAR_NOME
+	- APP_NOME
 		- O nome do aplicativo a ser feito do deploy, sem a extensão, exemplo: `app-corporativo`
-	- EAR_LOCAL
+	- APP_LOCAL
 		- O local do aplicativo gerado pelo Maven (geralmente em /target), exemplo: `\\AppCorporativoEAR\\target\\`
 	- PROJETOS
 		- O caminho/pastas a serem compiladas pelo Maven. Essas pastas serão executadas na ordem em que estão descritas. Caso alguma seja dependente de outra, coloque-a antes.
@@ -24,7 +24,7 @@
 	- WAS_CELL_CAMINHO
 		-  O caminho da célula, exemplo `C:\\IBM\\WebSphere\\AppServer\\profiles\\AppSrv01\\config\\cells\\cell01\\'`
 	- APP_NOME
-		-  `app-corporativo`
+		-  O nome do aplicativo, exemplo `app-corporativo`
 #### Execução
 - Parar o servidor
 - Executar onde o script for baixado
