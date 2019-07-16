@@ -91,7 +91,8 @@ Responsavel por recuperar o status do aplicativo no WAS
 def __app_status(aplicativo):
 	objeto = AdminControl.completeObjectName('type=Application,name=' + aplicativo + ',*')
 	
-	if objeto != "":
+	status = ''
+	if objeto != '':
 		status = 'Iniciado'
 	
 	return status
@@ -101,7 +102,6 @@ Responsavel por montar a informacao dos aplicativos no WAS
 '''
 def app_status_info():
 	appsString = AdminApp.list()
-	print appsString
 	appList = string.split(appsString, '\r\n')
 	print '###\n### Status\t| Aplicativo ###'
 
