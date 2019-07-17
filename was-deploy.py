@@ -16,6 +16,11 @@ import sys
 import string
 import subprocess
 
+# Lista de argumentos possiveis
+ARGUMENTOS = [
+    'start'
+]
+
 # Caminho do projeto
 # Ex: C:\\Desenvolvimento\\Projetos\\AppCorporativo\\
 PROJETO_BASE_LOCAL = '<CAMINHO_DO_PROJETO>'
@@ -30,94 +35,120 @@ APP_LOCAL = PROJETO_BASE_LOCAL + '<CAMINHO_DA_PASTA_TARGET>'
 
 # Caminho dos projetos/pastas a serem compilados em ordem, portanto, os projetos de EAR e WAR devem ser os ultimos
 PROJETOS = [
-	'ModuloEJB',
-	'ModuloWAR',
-	'ModuloEAR'
+    'ModuloEJB',
+    'ModuloWAR',
+    'ModuloEAR'
 ]
 
-'''
-Resposavel por compilar o projeto pelo Maven
-'''
-def compilar_maven():
-	projetos_compilados = []
-	if os.path.exists(PROJETO_BASE_LOCAL):
-		os.chdir(PROJETO_BASE_LOCAL)
-		print '###\n### Entrando na pasta {} ###\n###'.format(PROJETO_BASE_LOCAL)
+class CompilarApp:
 
-		for projeto in PROJETOS:
-			caminho_completo = PROJETO_BASE_LOCAL + projeto
-			if os.path.exists(caminho_completo):
-				os.chdir(caminho_completo)
-				print '###\n### Entrando na pasta {} ###\n###'.format(caminho_completo)
+    def __init__(self):
+        pass
 
-				codigo = subprocess.call(["mvn", "clean", "install", "-DskipTests", "-Pwas", "-o"], shell=True)
+    def executar_maven(self):
+        codigo = None
+        try:
+           codigo = subprocess.call(["mvn", "clean", "install", "-DskipTests", "-P<PROFILE>", "-o"], shell=True)
+        except Exception as ex:
+            print 'Excecao: ', ex
+        
+        return codigo
 
-				if codigo == 0:
-					projetos_compilados.append(projeto)
-				else:
-					print '###\n### Projeto {} NAO compilado corretamente ###\n###'.format(projeto)
-					break
-			else:
-				print '###\n### Projeto NAO existente {} ###\n###'.format(projeto)
-		
-		if codigo == 0 or codigo is None:
-			print '###\n### Projetos compilados com sucesso ###\n###'
-		else:
-			raise Exception('###\n### Não foi possível compilar o projeto ###\n###')
+    def compilar(self):
+        projetos_compilados = []
+        if os.path.exists(PROJETO_BASE_LOCAL):
+            os.chdir(PROJETO_BASE_LOCAL)
+            exibir_mensagem('Entrando na pasta {}'.format(PROJETO_BASE_LOCAL))
 
-'''
-Responsavel por realizar o deploy do aplicativo no WAS
-'''
-def deploy():
-	print '###\n### Realizando deploy do aplicativo: {} ###\n###'.format(APP_NOME)
-	AdminApp.install(APP_LOCAL + APP_NOME + '.ear','[-node nd1 -cell cell01 -server server1]')
-	AdminConfig.save()
-	appMan = AdminControl.queryNames('cell=cell01,node=nd1,type=ApplicationManager,process=server1,*')
-	AdminControl.invoke(appMan, 'startApplication', APP_NOME)
-	print '###\n### Deploy realizado com sucesso ###\n###'
+            if len(PROJETOS) >= 1:
+                for projeto in PROJETOS:
+                    caminho_completo = PROJETO_BASE_LOCAL + projeto
+                    if os.path.exists(caminho_completo):
+                        os.chdir(caminho_completo)
+                        exibir_mensagem('Entrando na pasta {}'.format(caminho_completo))
 
-'''
-Responsavel por realizar o undeploy do aplicativo no WAS
-'''
-def undeploy(): 
-	print '###\n### Realizando undeploy do aplicativo: {} ###\n###'.format(APP_NOME)
-	AdminApp.uninstall(APP_NOME)
-	AdminConfig.save()
-	print '###\n### Undeploy realizado com sucesso ###\n###'
+                        codigo = self.executar_maven()
 
-'''
-Responsavel por recuperar o status do aplicativo no WAS
-'''
-def __app_status(aplicativo):
-	objeto = AdminControl.completeObjectName('type=Application,name=' + aplicativo + ',*')
-	
-	status = ''
-	if objeto != '':
-		status = 'Iniciado'
-	
-	return status
+                        if codigo == 0:
+                            projetos_compilados.append(projeto)
+                        else:
+                            exibir_mensagem('Projeto {} NAO compilado corretamente'.format(projeto))
+                            break
+                    else:
+                        exibir_mensagem('Projeto NAO existente {}'.format(projeto))
+            else:
+                if os.path.exists(PROJETO_BASE_LOCAL):
+                    os.chdir(PROJETO_BASE_LOCAL)
+                    exibir_mensagem('Entrando na pasta {}'.format(PROJETO_BASE_LOCAL))
+                    
+                    codigo = self.executar_maven()
+                    if codigo != 0:
+                        exibir_mensagem('Projeto {} NAO compilado corretamente'.format(projeto))
 
-'''
-Responsavel por montar a informacao dos aplicativos no WAS
-'''
-def app_status_info():
-	appsString = AdminApp.list()
-	appList = string.split(appsString, '\r\n')
-	print '###\n### Status\t| Aplicativo ###'
+            if codigo == 0 or codigo is None:
+                exibir_mensagem('Projetos compilados com sucesso')
+            else:
+                raise Exception(u'NAO foi possível compilar o projeto')
 
-	for app in appList:
-		print '### ' + __app_status(app) + '\t| ' + app
+class GerenciarApp:
+
+    def __init__(self):
+        pass
+
+    def deploy(self, argumento):
+        exibir_mensagem('Realizando deploy do aplicativo: {}'.format(APP_NOME))
+        AdminApp.install(APP_LOCAL + APP_NOME + '.ear','[-node nd1 -cell cell01 -server server1 -MapWebModToVH [[.* .* default_host]]]')
+        AdminConfig.save()
+        appMan = AdminControl.queryNames('cell=cell01,node=nd1,type=ApplicationManager,process=server1,*')
+        
+        if argumento in ARGUMENTOS:
+            if argumento == 'start':
+                exibir_mensagem('Iniciando aplicativo')
+                AdminControl.invoke(appMan, 'startApplication', APP_NOME)
+        else:
+            raise Exception('Argumento invalido')
+
+        exibir_mensagem('Deploy realizado com sucesso')
+
+    def undeploy(self):
+        exibir_mensagem('Realizando undeploy do aplicativo: {}'.format(APP_NOME))
+        AdminApp.uninstall(APP_NOME)
+        AdminConfig.save()
+        exibir_mensagem('Undeploy realizado com sucesso')
+
+    def __app_status(self, aplicativo):
+        objeto = AdminControl.completeObjectName('type=Application,name=' + aplicativo + ',*')
+        
+        if objeto != '':
+            status = 'Iniciado'
+        else:
+            status = 'Parado'
+        
+        return status
+
+    def app_status_info(self):
+        appsString = AdminApp.list()
+        appList = string.split(appsString, '\r\n')
+        exibir_mensagem('Status | Aplicativo')
+
+        for app in appList:
+            exibir_mensagem(self.__app_status(app) + ' | ' + app)
+
+def exibir_mensagem(msg):
+    print '###\n### {} \n###'.format(msg)
 
 if __name__ == '__main__':
-	inicio = time.time()
-	
-	try:
-		app_status_info()
-		compilar_maven()
-		undeploy()
-		deploy()
-	except Exception as ex:
-		print 'Erro: {}'.format(ex)
+    inicio = time.time()
+    gerenciarApp = GerenciarApp()
+    compilarApp = CompilarApp()
 
-	minutos = ((time.time() - inicio) / 60)
-	print u'###\n### Tempo total: {} min ###'.format(minutos)
+    try:
+        gerenciarApp.app_status_info()
+        compilarApp.compilar()
+        gerenciarApp.undeploy()
+        gerenciarApp.deploy(sys.argv[0])
+    except Exception as ex:
+        exibir_mensagem('Erro: {}'.format(ex))
+
+    minutos = ((time.time() - inicio) / 60)
+    exibir_mensagem('Tempo total: {} min'.format(minutos))
