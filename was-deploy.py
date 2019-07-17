@@ -6,7 +6,7 @@ Script responsavel por realizar o undeploy e deploy do aplicativo no WAS, alem d
 
 Execução:
 	$ cd C:\<CAMINHO_WAS>\WebSphere\AppServer\bin
-	$ wsadmin.bat -lang jython -f <CAMINHO_SCRIPT> -username wasadmin -password wasadmin
+	$ wsadmin.bat -lang jython -f <CAMINHO_SCRIPT> -username <USUARIO> -password <SENHA>
 
 Autor: Filipe Manuel
 '''
