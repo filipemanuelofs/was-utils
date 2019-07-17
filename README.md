@@ -11,12 +11,15 @@
 		- O caminho/pastas a serem compiladas pelo Maven. Essas pastas serão executadas na ordem em que estão descritas. Caso alguma seja dependente de outra, coloque-a antes.
 		- `PROJETOS [ ModuloEJB, ModuloWAR, ModuloEAR ]`
 		- Neste caso, o `ModuloEAR` empacota o `ModuloWAR` e `ModuloEJB`, por isso ele ficou por último.
+		- Caso seja vazio, a compilação irá ocorrer no projeto completo, de acordo com a variável PROJETO_BASE_LOCAL
 #### Execução
 - Entrar na pasta `bin` do WebSphere:
 	- `$ cd <CAMINHO_WAS>\WebSphere\AppServer\bin`
 - Executar o comando dentro da pasta `bin`:
-	- `$ wsadmin.bat -language jython -f <CAMINHO_SCRIPT>\was-deploy.py -username wasadmin -password wasadmin`
+	- `$ wsadmin.bat -f <CAMINHO_SCRIPT>\was-deploy.py -lang jython -username <USER> -password <PWD>`
 	- Caso queira utilizar outro usuário para execução do deploy, troque o parâmetro `-username` e `-password`
+	- Caso queira iniciar o aplicativo após a instalação, passe o argumento `start`
+		- `$ wsadmin.bat -f <CAMINHO_SCRIPT>\was-deploy.py start -lang jython -username <USER> -password <PWD>`
 
 ## was-fix-composition-unit.py
 #### Configuração
