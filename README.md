@@ -33,3 +33,21 @@
 - Executar onde o script for baixado
 	- `$ python was-fix-composition-unit.py`
 - Iniciar o servidor
+
+## was-start.bat
+#### Configuração
+- Abra o script e configure as constantes de acordo do servidor:
+	- WAS_USER
+		-  usuário de conexão com o console do servidor
+	- WAS_PWD
+		-  senha de conexão com o console do servidor
+- Caso não esteja configurada, é necessário configurar a variável de ambiente `WAS_HOME` apontando para o local de instalação do seu servidor, por exemplo:
+	- `WAS_HOME=C:\"Program Files"\IBM\WebSphere\AppServer`
+
+#### Execução
+- Iniciar o arquivo
+- Escolher uma opção 
+	- (0) Sair; 
+	- (1) Iniciar servidor; 
+	- (2) Parar servidor;
+	- (3) Reiniciar servidor.
