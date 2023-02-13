@@ -24,8 +24,7 @@ ECHO :--------------------------
 ECHO ::::: INICIANDO SERVIDOR ::
 ECHO :--------------------------
 ECHO .
-%WAS_HOME%\bin\startServer.bat -profileName %WAS_PROFILE% %WAS_SERVER%
-START https://localhost:9043/ibm/console/unsecureLogon.jsp
+%WAS_HOME%\bin\startServer.bat -profileName %WAS_PROFILE% %WAS_SERVER% && START https://localhost:9043/ibm/console/unsecureLogon.jsp
 GOTO END
 
 :STOP
@@ -43,9 +42,7 @@ ECHO :--------------------------
 ECHO ::: REINICIANDO SERVIDOR ::
 ECHO :--------------------------
 ECHO .
-%WAS_HOME%\bin\stopServer.bat -profileName %WAS_PROFILE% %WAS_SERVER% -username %WAS_USER% -password %WAS_PWD%
-%WAS_HOME%\bin\startServer.bat -profileName %WAS_PROFILE% %WAS_SERVER%
-START https://localhost:9043/ibm/console/unsecureLogon.jsp
+%WAS_HOME%\bin\stopServer.bat -profileName %WAS_PROFILE% %WAS_SERVER% -username %WAS_USER% -password %WAS_PWD% && %WAS_HOME%\bin\startServer.bat -profileName %WAS_PROFILE% %WAS_SERVER% && START https://localhost:9043/ibm/console/unsecureLogon.jsp
 GOTO END
 
 :END
